@@ -1,0 +1,110 @@
+type name {
+  extends text;
+  validate regex /^[ \w\'-]+$/;
+
+  message validate "$1 must be completed.";
+}
+
+# lol comment
+
+type dob {
+  extends date;
+  validate date-less-than 16 years; # I gots a comment yeah yeah yeah
+
+  message validate "You must be at least 16 years old to join";
+}
+
+type australianStates {
+  extends text;
+
+  validate in ["NT", "VIC", "NSW", "ETC"];
+}
+
+type postcode {
+  extends text;
+
+  validate regex /^\d{4}$/;
+}
+
+type membership {
+  extends text;
+
+  validate in ["full", "associate"];
+}
+
+type payment {
+  extends text;
+
+  validate in ["credit", "direct_deposit", "paypal"];
+}
+
+type phone {
+    validate regex /^\d{10}$/;
+}
+
+type contribution {
+  extends integer;
+
+  validate calc x == 2000;
+}
+
+type donationAUD {
+  extends integer;
+
+  validate calc x >= 0;
+}
+
+type dec {
+  extends boolean;
+
+  validate value true;
+}
+
+# Hidden configuration fields
+
+# payment_required: lazy boolean for new or renewal.
+boolean payment_required { transient; required; }
+
+# FORM!
+
+name given_names { required; }
+name surname { required; }
+dob date_of_birth { required; }
+text gender;
+
+boolean overseas { transient; }
+
+text address { required; }
+text suburb { required if overseas is false; }
+australianStates state { required if overseas is false; }
+postcode postcode { required if overseas is false; }
+
+boolean postal { transient; }
+
+text postal_address { required if postal is true; }
+text postal_suburb { required if postal is true; }
+australianStates postal_state { required if postal is true; }
+postcode postal_postcode { required if postal is true; }
+
+email email { required; }
+phone primary_phone { required if overseas is false; }
+phone secondary_phone;
+
+membership membership_type { required; }
+payment payment_method { required if payment_required is true; group payment; }
+
+contribution fee { required if payment_required is true; group payment; }
+donationAUD donation { required if payment_required is true; group payment; }
+
+#text card_name { group payment; }
+#text card_number { group payment; }
+#text card_cvv { group payment; }
+#text card_month { group payment; }
+#text card_year { group payment; }
+text pin_payments_ref { group payment; }
+
+boolean have_been_member;
+text which_party { required if have_been_member is true; }
+
+boolean mailing_lists;
+dec declaration { required; }

@@ -1,0 +1,52 @@
+{
+  "global": {
+    "base_dir": "/Users/brendan/Data/mutiny2",
+    "logging": {
+      "level": "DEBUG",
+      "database": "mutiny",
+      "collection": "logging",
+      "send_emails": true,
+      "email": {
+        "smtp_host": "",
+        "from": "",
+        "to": [""],
+        "username": "",
+        "password": ""
+      }
+    },
+    "apis": {
+      "pin": {
+        "secret_key": "",
+        "endpoint": ""
+
+      }
+    }
+  },
+  "endpoints": [
+    {
+      "name": "membership",
+      "type": "membership",
+
+      "validation": "my.valid",
+      "auth_fields": ["date_of_birth", "email", "surname"],
+      "banned_emails": ["*@pirateparty\\.org\\.au", "*\\.gov\\.au", "*\\.edu\\.au"],
+
+      "send_email": true,
+      "email_file": "membership/email.txt",
+      "email_from": "secretary@pirateparty.org.au",
+
+      "database": "ppau",
+      "collection": "members"
+    },
+    {
+      "type": "survey",
+      "endpoint": "/survey",
+      "token_required": false
+    },
+    {
+      "type": "poll",
+      "endpoint": "/poll"
+    }
+  ]
+}
+
